@@ -2525,6 +2525,19 @@ w_workaround_wine_bug()
     return 0
 }
 
+#32-bit status(w_ma32_status, set in verb)	64-bit status (w_ma64_status, set in verb)	multiarch status (w_ma_status, set by w_metadata)
+#w_ma32_works	w_ma64_works	w_ma_works
+#w_ma32_works	w_ma64_unsupported	w_ma_32only
+#w_ma32_unsupported	w_ma64_works	w_ma_64only
+#w_ma32_works	w_ma64_broken	w_ma_64broken
+#w_ma32_broken	w_ma64_works	w_ma_32broken
+#w_ma32_broken	w_ma64_broken	w_ma_broken
+#w_ma32_works	w_ma64_untested	w_ma_64untested
+#w_ma32_untested	w_ma64_works	w_ma_32untested
+#w_ma32_untested	w_ma64_untested	w_ma_untested
+
+# If unset, use w_ma32_untested/w_ma64_untested
+
 # Function for verbs to register themselves so they show up in the menu.
 # Example:
 # w_metadata wog games \
@@ -2532,6 +2545,8 @@ w_workaround_wine_bug()
 #   pub="2D Boy" \
 #   year="2008" \
 #   media="download" \
+#   w_ma32_status="works" \
+#   w_ma64_status="works" \
 #   file1="WorldOfGooDemo.1.0.exe"
 
 w_metadata()
@@ -2567,7 +2582,15 @@ w_metadata()
             w_die "bug: w_metadata $_W_md_cmd has a unix path for installed_file1, should be a windows path";;
         media=download_manual)
             w_die "bug: verb $_W_md_cmd has media=download_manual, should be manual_download" ;;
+        # FIXME: 32/64 status
+        #w_ma32_status=*)
+        #    #echo "fixme32 $w_ma32_status" ; shift ;;
+        #    shift ;;
+        #w_ma64_status=*)
+        #    shift ;;
+        #    #echo "fixme64 $w_ma64_status" ; shift ;;
         esac
+
         # Use longest match when stripping value,
         # and shortest match when stripping name,
         # so descriptions can have embedded equals signs
@@ -2588,6 +2611,7 @@ w_metadata()
     *)
         if grep '[^"]$' "$file"
         then
+            cat "$file"
             w_die "bug: w_metadata $_W_md_cmd corrupt, might need forward slashes?"
         fi
         ;;
@@ -2606,6 +2630,32 @@ w_metadata()
 w_declare_exe()
 {
     w_warn "w_declare_exe is deprecated, now a noop"
+}
+
+# Check that the current arch supports the package being installed,
+# Should also integrate with menu somehow, so packages are marked appropriately somehow
+w_check_arch()
+{
+    # FIXME: not sure of policy..
+    # shellcheck disable=SC2154
+    case "$W_ARCH" in
+        win32)
+            case "$w_ma32_status" in
+                broken|unsupported) w_die "Package ${cmd} is unsupported on $W_ARCH" ;;
+                untested) w_warn "Package ${cmd} is untested on $W_ARCH" ;;
+                works) : ;;
+                *) echo "No/unknown status given, not checking" ;;
+            esac
+            ;;
+        win64)
+            case "$w_ma64_status" in
+                broken|unsupported) w_die "Package ${cmd} is unsupported on $W_ARCH" ;;
+                untested) w_warn "Package ${cmd} is untested on $W_ARCH" ;;
+                works) : ;;
+                *) echo "No/unknown status given, not checking" ;;
+            esac
+            ;;
+    esac
 }
 
 # Checks that a conflicting verb is not already installed in the prefix
@@ -2714,6 +2764,9 @@ w_do_call()
                 w_conflicts "$1" "$x"
             done
         fi
+
+        # Don't attempt to install if it's not supported:
+        w_check_arch
 
         # We'd like to get rid of W_PACKAGE, but for now, just set it as late as possible.
         W_PACKAGE=$1
@@ -6352,6 +6405,8 @@ w_metadata dotnet11 dlls \
     publisher="Microsoft" \
     year="2003" \
     media="download" \
+    w_ma32_status="works" \
+    w_ma64_status="unsupported" \
     conflicts="dotnet20 dotnet20sdk dotnet20sp1 dotnet20sp2 dotnet30 dotnet30sp1 dotnet35 dotnet35sp1 vjrun20" \
     file1="dotnetfx.exe" \
     installed_file1="c:/windows/Microsoft.NET/Framework/v1.1.4322/ndpsetup.ico"
