@@ -9232,6 +9232,18 @@ load_vcrun2005()
 
     w_try_cd "$W_CACHE/$W_PACKAGE"
     w_try "$WINE" "$file1" $W_UNATTENDED_SLASH_Q
+
+    # Some of the dlls exist only for win32 (atl80/vcomp):
+    if [ "${W_ARCH}" = win64 ] ; then
+        helper_win7sp1_x64 amd64_microsoft.vc80.crt_1fc8b3b9a1e18e3b_8.0.50727.4940_none_88df89932faf0bf6/msvcm80.dll
+        w_try cp "${W_TMP}/amd64_microsoft.vc80.crt_1fc8b3b9a1e18e3b_8.0.50727.4940_none_88df89932faf0bf6/msvcm80.dll" "$W_SYSTEM64_DLLS/msvcm80.dll"
+
+        helper_win7sp1_x64 amd64_microsoft.vc80.crt_1fc8b3b9a1e18e3b_8.0.50727.4940_none_88df89932faf0bf6/msvcp80.dll
+        w_try cp "${W_TMP}/amd64_microsoft.vc80.crt_1fc8b3b9a1e18e3b_8.0.50727.4940_none_88df89932faf0bf6/msvcp80.dll" "$W_SYSTEM64_DLLS/msvcp80.dll"
+
+        helper_win7sp1_x64 amd64_microsoft.vc80.crt_1fc8b3b9a1e18e3b_8.0.50727.4940_none_88df89932faf0bf6/msvcr80.dll
+        w_try cp "${W_TMP}/amd64_microsoft.vc80.crt_1fc8b3b9a1e18e3b_8.0.50727.4940_none_88df89932faf0bf6/msvcr80.dll" "$W_SYSTEM64_DLLS/msvcr80.dll"
+    fi
 }
 
 #----------------------------------------------------------------
