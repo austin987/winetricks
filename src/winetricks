@@ -2447,20 +2447,20 @@ w_wine_version()
 #    val1,val2 (for >= val1 && <= val2)
 w_wine_version_in()
 {
-   for _W_range
-   do
-     _W_val1=$(echo "$_W_range" | sed 's/,.*//')
-     _W_val2=$(echo "$_W_range" | sed 's/.*,//')
+    for _W_range
+    do
+        _W_val1=$(echo "$_W_range" | sed 's/,.*//')
+        _W_val2=$(echo "$_W_range" | sed 's/.*,//')
 
-     # If in this range, return true
-     case $_W_range in
-     ,*)                                  w_wine_version   -le "$_W_val2" && unset _W_range _W_val1 _W_val2 && return 0;;
-     *,) w_wine_version -ge "$_W_val1"                                    && unset _W_range _W_val1 _W_val2 && return 0;;
-     *)  w_wine_version -ge "$_W_val1" && w_wine_version   -le "$_W_val2" && unset _W_range _W_val1 _W_val2 && return 0;;
-     esac
-   done
-   unset _W_range _W_val1 _W_val2
-   return 1
+        # If in this range, return true
+        case $_W_range in
+            ,*)                                  w_wine_version   -le "$_W_val2" && unset _W_range _W_val1 _W_val2 && return 0;;
+            *,) w_wine_version -ge "$_W_val1"                                    && unset _W_range _W_val1 _W_val2 && return 0;;
+            *)  w_wine_version -ge "$_W_val1" && w_wine_version   -le "$_W_val2" && unset _W_range _W_val1 _W_val2 && return 0;;
+        esac
+    done
+    unset _W_range _W_val1 _W_val2
+    return 1
 }
 
 # Built-in self test for w_wine_version_in
