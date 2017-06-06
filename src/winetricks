@@ -2447,6 +2447,7 @@ w_wine_version()
 #    val1,val2 (for >= val1 && <= val2)
 w_wine_version_in()
 {
+    # FIXME: prob some bugs
     for _W_range
     do
         _W_val1=$(echo "$_W_range" | sed 's/,.*//')
@@ -4929,6 +4930,8 @@ winetricks_init()
     # See also w_wine_version()
     # A small hack...
     case "$WINETRICKS_WINE_VERSION" in
+        #FIXME: remove old wine
+        # FIXME: here 2.0 shit
         wine-1.4-*) WINETRICKS_WINE_VERSION="wine-1.4.40"; export WINETRICKS_WINE_VERSION;;
         wine-1.4) WINETRICKS_WINE_VERSION="wine-1.4.0"; export WINETRICKS_WINE_VERSION;;
         wine-1.6-*) WINETRICKS_WINE_VERSION="wine-1.6.0"; export WINETRICKS_WINE_VERSION;;
@@ -4940,8 +4943,21 @@ winetricks_init()
         wine-3.0-*) WINETRICKS_WINE_VERSION="wine-1.11.0"; export WINETRICKS_WINE_VERSION;;
         wine-3.0) WINETRICKS_WINE_VERSION="wine-1.11.0"; export WINETRICKS_WINE_VERSION;;
     esac
-    WINETRICKS_WINE_MINOR=$(echo $WINETRICKS_WINE_VERSION | sed 's/wine-1\.\([0-9]*\)\..*/\1/')
-    WINETRICKS_WINE_MICRO=$(echo $WINETRICKS_WINE_VERSION | sed 's/wine-1.[0-9][0-9]*\.\([0-9]*\).*/\1/')
+
+    # Need to account for lots of variations:
+    # wine-1.9.22
+    # wine-1.9.22 (Debian 1.9.22-1)
+    # wine-1.9.22 (Staging)
+    # wine-2.0 (Debian 2.0-1)
+    # wine-2.8
+    _wine_version_stripped="$(echo $WINETRICKS_WINE_VERSION | cut -d ' ' -f1 | sed 's/wine-//')"
+
+    WINETRICKS_WINE_MAJOR="$(echo "${_wine_version_stripped}" | cut -d '.' -f1)"
+    WINETRICKS_WINE_MINOR="$(echo "${_wine_version_stripped}" | cut -d '.' -f2)"
+    # FIXME verify: not all releases have one, all x.y don't, so 1.8, but also 2.0, 3.1, etc.
+    WINETRICKS_WINE_MICRO="$(echo "${_wine_version_stripped}" | cut -d '.' -f3):-0"
+
+    w_warn "asdfasdf $WINETRICKS_WINE_MAJOR $WINETRICKS_WINE_MINOR, $WINETRICKS_WINE_MICRO"
 
     if [ ! "$WINETRICKS_SUPER_QUIET" ] ; then
         echo "Using winetricks $(winetricks_print_version) with ${WINETRICKS_ORIG_WINE_VERSION} and WINEARCH=${W_ARCH}"
@@ -9565,6 +9581,74 @@ load_vcrun2015()
         fi
         ;;
     esac
+}
+
+#----------------------------------------------------------------
+
+w_metadata footest settings \
+    title="Testing shit" \
+    publisher="test" \
+    year="2012" \
+    media="download"
+
+load_footest()
+{
+# Usage: w_wine_version_in range ...
+# True if wine version in any of the given ranges
+# 'range' can be
+#    val1,   (for >= val1)
+#    ,val2   (for <= val2)
+#    val1,val2 (for >= val1 && <= val2)
+
+    # FIXME: move into tests/, with wine version overriding as well, then test lots of combos:
+    # Some better test wrappers as well..
+
+    w_info "w_workaround_wine_bug tests"
+
+    if w_workaround_wine_bug 12345 "test" ,1.5.28
+    then
+        w_warn "Using w_workaround, version: $WINETRICKS_WINE_VERSION"
+    else
+        w_die "Not using w_workaround, version: $WINETRICKS_WINE_VERSION"
+    fi
+    
+    if w_workaround_wine_bug 12345 "test" 1.5.28,
+    then
+        w_die "Using w_workaround, version: $WINETRICKS_WINE_VERSION"
+    else
+        w_warn "Not using w_workaround, version: $WINETRICKS_WINE_VERSION"
+    fi
+     
+    if w_workaround_wine_bug 12345 "test" ,3.3.3
+    then
+        w_warn "Using w_workaround, version: $WINETRICKS_WINE_VERSION"
+    else
+        w_warn "Not using w_workaround, work: 3.3.3 version: $WINETRICKS_WINE_VERSION"
+    fi
+
+    # FIXME: should apply workaround, doesn't
+    if w_workaround_wine_bug 12345 "test" 3.3.3,
+    then
+        w_warn "Using w_workaround, version: $WINETRICKS_WINE_VERSION"
+    else
+        w_die "Not using w_workaround, work: 3.3.3 version: $WINETRICKS_WINE_VERSION"
+    fi
+
+    # change
+    if w_workaround_wine_bug 12345 "test" ,2.0
+    then
+        w_warn "Using w_workaround, version: $WINETRICKS_WINE_VERSION"
+    else
+        w_warn "Not using w_workaround, version: $WINETRICKS_WINE_VERSION"
+    fi
+
+    # change
+    if w_workaround_wine_bug 12345 "test" ,3.0.0
+    then
+        w_warn "Using w_workaround, version: $WINETRICKS_WINE_VERSION"
+    else
+        w_warn "Not using w_workaround, version: $WINETRICKS_WINE_VERSION"
+    fi
 }
 
 #----------------------------------------------------------------
