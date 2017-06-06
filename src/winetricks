@@ -2463,6 +2463,7 @@ w_wine_version_in()
     return 1
 }
 
+# FIXME: maybe allow overriding the version as a env variable, then we could more easily add tests
 # Built-in self test for w_wine_version_in
 #w_wine_version_in_test()
 #{
