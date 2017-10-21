@@ -2521,10 +2521,12 @@ w_workaround_wine_bug()
 
 # Function for verbs to register themselves so they show up in the menu.
 # Example:
+# Note: supported_arches refers to physical processor, not prefix
 # w_metadata wog games \
 #   title="World of Goo Demo" \
 #   pub="2D Boy" \
 #   year="2008" \
+#   supported_arches="INTEL,AMD64" \
 #   media="download" \
 #   file1="WorldOfGooDemo.1.0.exe"
 
@@ -2696,6 +2698,21 @@ w_do_call()
 
         # We'd like to get rid of W_PACKAGE, but for now, just set it as late as possible.
         W_PACKAGE=$1
+
+        # FIXME: also need something to check prefix support (win32/win64)
+        # For backwards compatability, skip check if supported_arches isn't defined:
+        if [ ! -z "$supported_arches" ]; then
+            if [ "$supported_arches" = "any" ]; then
+                # Supported everywhere
+                :
+            # -w so ARM doesn't match ARM64
+            elif echo "$supported_arches" | grep -w "$W_PROCESSOR_ARCH"; then
+                # Supported on this arch
+                :
+            else
+                w_die "This package ($W_PACKAGE) is not supported for your processor type ($W_PROCESSOR_ARCH)"
+            fi
+        fi
         w_try "load_$cmd" "$arg"
         winetricks_stats_log_command "$@"
 
@@ -4900,6 +4917,37 @@ winetricks_init()
     # Overridden for windows
     W_ISO_MOUNT_ROOT=/mnt/winetricks
     W_ISO_MOUNT_LETTER=i
+
+    # Types are documented at http://masm32.com/board/index.php?topic=3401.0
+    # i386:
+    #define PROCESSOR_ARCHITECTURE_INTEL    0
+
+    # amd64/x86_64
+    #define PROCESSOR_ARCHITECTURE_AMD64    9
+
+    # powerpc:
+    #define PROCESSOR_ARCHITECTURE_PPC      3
+
+    # arm:
+    #define PROCESSOR_ARCHITECTURE_ARM      5
+    # arm64:
+    #define PROCESSOR_ARCHITECTURE_ARM64    12
+
+    # wine doesn't build on these:
+    #define PROCESSOR_ARCHITECTURE_MIPS     1
+    #define PROCESSOR_ARCHITECTURE_ALPHA    2
+    #define PROCESSOR_ARCHITECTURE_ALPHA64  7
+    #define PROCESSOR_ARCHITECTURE_SHX      4
+    #define PROCESSOR_ARCHITECTURE_IA64     6
+    #define PROCESSOR_ARCHITECTURE_MSIL     8
+    #define PROCESSOR_ARCHITECTURE_IA32_ON_WIN64    10
+
+    # these are special, but wine will never return them, so don't worry about them:
+    #define PROCESSOR_ARCHITECTURE_NEUTRAL          11
+    #define PROCESSOR_ARCHITECTURE_UNKNOWN  0xFFFF
+
+    # FIXME: decide supported_arches (in w_metadata) format
+    W_PROCESSOR_ARCH="$(w_expand_env PROCESSOR_ARCHITECTURE)"
 
     WINETRICKS_WINE_VERSION=${WINETRICKS_WINE_VERSION:-$(winetricks_early_wine --version | sed 's/.*wine/wine/')}
     WINETRICKS_ORIG_WINE_VERSION="${WINETRICKS_WINE_VERSION}"
@@ -9167,6 +9215,7 @@ w_metadata mfc42 dlls \
     publisher="Microsoft" \
     year="2000" \
     media="download" \
+    platforms="x86,amd64" \
     file1="../vcrun6/vc6redistsetup_deu.exe" \
     installed_file1="$W_SYSTEM32_DLLS_WIN/mfc42u.dll"
 
@@ -17593,6 +17642,7 @@ w_metadata wog games \
     title="World of Goo Demo" \
     publisher="2D Boy" \
     year="2008" \
+    supported_arches="INTEL,AMD64" \
     media="download" \
     file1="WorldOfGooDemo.1.0.exe" \
     installed_exe1="$W_PROGRAMS_X86_WIN/WorldOfGooDemo/WorldOfGoo.exe"
