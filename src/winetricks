@@ -426,7 +426,7 @@ w_try_msiexec64()
     w_try "$WINE" start /wait "$W_SYSTEM64_DLLS_WIN32/msiexec.exe" $W_UNATTENDED_SLASH_Q "$@"
 }
 
-# fixme: cleanup. For wow64 registries, some/all entries need to be duplicated.
+# FIXME: cleanup. For wow64 registries, some/all entries need to be duplicated.
 # Not sure of the best way yet, but thinking running wine/wine64 regedit for each?
 w_try_regedit32()
 {
@@ -2190,7 +2190,7 @@ w_override_app_dlls()
     _W_mode=$1
     shift
 
-    # Fixme: handle comma-separated list of modes
+    # FIXME: handle comma-separated list of modes
     case $_W_mode in
         b|builtin) _W_mode=builtin ;;
         n|native) _W_mode=native ;;
@@ -4058,7 +4058,7 @@ winetricks_die_if_user_not_dirowner()
     if test -d "$1"; then
         _W_checkdir="$1"
     else
-        # fixme: quoting problem?
+        # FIXME: quoting problem?
         _W_checkdir=$(dirname "$1")
     fi
     _W_nuser=$(id -u)
