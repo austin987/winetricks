@@ -9477,11 +9477,24 @@ w_metadata vcrun2012 dlls \
 load_vcrun2012()
 {
     # https://www.microsoft.com/en-us/download/details.aspx?id=30679
-    w_download https://download.microsoft.com/download/1/6/B/16B06F60-3B20-4FF2-B699-5E9B7962F9AE/VSU_4/vcredist_x86.exe b924ad8062eaf4e70437c8be50fa612162795ff0839479546ce907ffa8d6e386
 
     w_override_dlls native,builtin atl110 msvcp110 msvcr110 vcomp110
+    
+    case "$W_PROCESSOR_ARCH" in
+        ARM|ARM64)
+            w_download https://download.microsoft.com/download/1/6/B/16B06F60-3B20-4FF2-B699-5E9B7962F9AE/VSU4/vcredist_arm.exe 623fd5d6de80d117408b76678d5d0d44d3966a48a3254055ca9512bf3dad1635
+            w_try_cd "$W_CACHE"/"$W_PACKAGE"
+            w_try "$WINE" vcredist_arm.exe $W_UNATTENDED_SLASH_Q
+            ;;
+        *)
+            # FIXME: amd64/intel
+            exit 0
+            w_download https://download.microsoft.com/download/1/6/B/16B06F60-3B20-4FF2-B699-5E9B7962F9AE/VSU_4/vcredist_x86.exe b924ad8062eaf4e70437c8be50fa612162795ff0839479546ce907ffa8d6e386
     w_try_cd "$W_CACHE"/"$W_PACKAGE"
     w_try "$WINE" vcredist_x86.exe $W_UNATTENDED_SLASH_Q
+            ;;
+    esac
+
 
     case "$W_ARCH" in
         win64)
@@ -9550,12 +9563,14 @@ load_vcrun2013()
 
 #----------------------------------------------------------------
 
+# FIXME: does arm64 work?
 w_metadata vcrun2015 dlls \
     title="Visual C++ 2015 libraries (concrt140.dll,mfc140.dll,mfc140u.dll,mfcm140.dll,mfcm140u.dll,msvcp140.dll,vcamp140.dll,vccorlib140.dll,vcomp140.dll,vcruntime140.dll)" \
     publisher="Microsoft" \
     year="2015" \
     media="download" \
     conflicts="vcrun2017" \
+    supported_arches="INTEL,AMD64,ARM,ARM64" \
     file1="vc_redist.x86.exe" \
     installed_file1="$W_SYSTEM32_DLLS_WIN/mfc140.dll"
 
@@ -9576,6 +9591,7 @@ load_vcrun2015()
     w_try_cd "$W_CACHE"/"$W_PACKAGE"
     w_try "$WINE" vc_redist.x86.exe $W_UNATTENDED_SLASH_Q
 
+    # FIXME: not needed on arm64/win64
     case "$W_ARCH" in
         win64)
             # Also install the 64-bit version
