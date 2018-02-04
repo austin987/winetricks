@@ -1782,8 +1782,8 @@ w_umount()
               w_try "$WINETRICKS_SUDO" "rm -rf $W_ISO_MOUNT_ROOT"
               ;;
             *)
-              "$WINETRICKS_SUDO" "umount -l $W_ISO_MOUNT_ROOT"
-              w_try "$WINETRICKS_SUDO" "rm -rf $W_ISO_MOUNT_ROOT"
+              "$WINETRICKS_SUDO" umount -l "$W_ISO_MOUNT_ROOT"
+              w_try "$WINETRICKS_SUDO" rm -rf "$W_ISO_MOUNT_ROOT"
               ;;
         esac
 
