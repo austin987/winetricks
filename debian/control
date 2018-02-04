@@ -1,7 +1,7 @@
 Source: winetricks
 Section: contrib/otherosfs
 Priority: optional
-Maintainer: Dan Kegel <dank@kegel.com>
+Maintainer: Austin English <austinenglish@gmail.com>
 Standards-Version: 3.8.1
 Build-Depends: debhelper,
         devscripts
