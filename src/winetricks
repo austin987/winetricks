@@ -8970,6 +8970,22 @@ load_pngfilt()
 
 #----------------------------------------------------------------
 
+w_metadata powershell dlls \
+    title="Microsoft Powershell 6" \
+    publisher="Microsoft" \
+    year="2018" \
+    media="download" \
+    file1="PowerShell-6.0.2-win-x86.msi" \
+    installed_file1="$W_SYSTEM32_DLLS_WIN/foobar.dll"
+
+load_powershell()
+{
+    w_download https://github.com/PowerShell/PowerShell/releases/download/v6.0.2/PowerShell-6.0.2-win-x86.exe
+    # FIXME: Should this go in system32 or its own folder?
+}
+
+#----------------------------------------------------------------
+
 w_metadata qdvd dlls \
     title="qdvd.dll" \
     publisher="Microsoft" \
