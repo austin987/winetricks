@@ -26,6 +26,7 @@ cache="$XDG_CACHE_HOME/winetricks"
 set -x
 
 # FIXME: currently this requires running from src (linkcheck.sh might too), which is ugly.
+# https://github.com/Winetricks/winetricks/issues/891
 # IMO it should run from top, and/or have the logic to find src and cd there itself
 # Once this is fixed, check outputdir logic below:
 if [ -f README.md ] ; then
@@ -81,41 +82,47 @@ export WINETRICKS_LATEST_VERSION_CHECK
 WINETRICKS_SUPER_QUIET=1
 export WINETRICKS_SUPER_QUIET
 
-# verbs known to not work in -q mode yet
+###
+# New format:
+# Last checked: YYYY/MM/DD / $wine-version / $winetricks-version
+# Problem: (description of what's broken/failing)
+# Bug: Link to wine/winetricks bug report
+###
+
+# Last checked: 2018/05/14 / wine-3.7-156-g6d6b4bffb3 / winetricks-20180513
+# Problem: known to not work in -q mode yet
+# Bug:
+# dx8sdk: https://github.com/Winetricks/winetricks/issues/1003
+# kde: https://github.com/Winetricks/winetricks/issues/1004
+# mingw: https://github.com/Winetricks/winetricks/issues/1005
+# psdk2003: https://github.com/Winetricks/winetricks/issues/1006
+# psdk2007: https://github.com/Winetricks/winetricks/issues/1007
 BLACKLIST="dx8sdk|kde|mingw|psdk2003|psdkwin7"
-# verbs that hang in -q because of simple problem we should work around soon
+
+# FIXME: verbs that hang in -q because of simple problem we should work around soon
 BLACKLIST="$BLACKLIST|vc2005trial"
-# verbs that are too slow
-BLACKLIST="$BLACKLIST|bfbc2|dxsdk_nov2006|dxsdk_jun2010"
-# steam verbs I don't have
-BLACKLIST="$BLACKLIST|borderlands|supermeatboy|trine"
-# broken http://bugs.winehq.org/show_bug.cgi?id=26411:
-BLACKLIST="$BLACKLIST|mfsxde|mfsx_demo"
-# hang lately, probably ui changes in install process
-BLACKLIST="$BLACKLIST|bioshock2"
-# broken/flaky, http://bugs.winehq.org/show_bug.cgi?id=26016
-BLACKLIST="$BLACKLIST|xmllite"
-# redundant metaverbs
-BLACKLIST="$BLACKLIST|allcodecs"
-# FIXME: (wine/winetricks bug?) usually hangs in winetricks-test:
-BLACKLIST="$BLACKLIST|dotnet30sp1|dotnet35|dotnet35sp1|dotnet45"
-# https://bugs.winehq.org/show_bug.cgi?id=40460
-BLACKLIST="$BLACKLIST|dotnet20sp2|xna31"
+
+# Last Checked: 2018/05/14 / wine-3.7-156-g6d6b4bffb3 / winetricks-20180513
+# autohotkey is broken, breaking these verbs:
+# https://bugs.winehq.org/show_bug.cgi?id=45156
+# Not-codecs:
+BLACKLIST="$BLACKLIST|dotnet20sdk|steam"
+# Codecs
+BLACKLIST="$BLACKLIST|allcodecs|dirac|icodecs|xvid"
+
+# Last Checked: 2018/05/11 / wine-3.7-156-g6d6b4bffb3 / winetricks-20180217
+# Problem: hangs in comctl32 when installing wmi
 # https://bugs.winehq.org/show_bug.cgi?id=16876
 BLACKLIST="$BLACKLIST|wmi"
 
-# Travis CI is apparently blocking archive.org, which breaks several verbs:
-# https://github.com/travis-ci/travis-ci/issues/6798
-# Blacklist those verbs on those hosts:
-# FIXME: setup another test target for torify, use it to d/l these?
-ARCHIVE_ORG_BLACKLIST="atmlib|avifil32|cabinet|cmd|comctl32ocx|comdgl32ocx|gmdls|mdac27|mfc40|msflxgrd|mshflxgd"
-ARCHIVE_ORG_BLACKLIST="$ARCHIVE_ORG_BLACKLIST|msls31ms|msmask|msscript|msxml3|pdh|pngfilt|riched30"
-ARCHIVE_ORG_BLACKLIST="$ARCHIVE_ORG_BLACKLIST|richtx32|secur32|tabctl32|usp10|"
 
-# See https://docs.travis-ci.com/user/environment-variables/#Default-Environment-Variables
-if [ "$TRAVIS" = "true" ] ; then
-    BLACKLIST="$ARCHIVE_ORG_BLACKLIST|$BLACKLIST"
-fi
+
+#####
+# FIXME: don't push anything below here (to master):
+
+BLACKLIST="$BLACKLIST|dotnet45|dotnet46|dotnet461" # FIXME heap deadlock
+BLACKLIST="$BLACKLIST|dotnet462" # FIXME not found after install, bad file check?
+##
 
 # Tests that fail under Xvfb
 XVFB_DOTNET_BLACKLIST="dotnet11|dotnet11sp1|dotnet20|dotnet20sdk|dotnet20sp1|dotnet30|dotnet40|dotnet46"
@@ -124,7 +131,7 @@ XVFB_BLACKLIST="$XVFB_BLACKLIST|jet40|nuget|quicktime72|vcrun2008|vcrun2010|vcru
 XVFB_BLACKLIST="$XVFB_BLACKLIST|vjrun20|windowscodecs|wmi|wmp9|wmp10|wsh56js|wsh56vb|xmllite|xna31|xna40|xvid"
 
 # Verbs known to update frequently
-QUICKCHECK="flash steam"
+QUICKCHECK="flash" # steam"
 
 failed_verbs=""
 passes=0
