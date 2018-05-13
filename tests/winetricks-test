@@ -35,7 +35,7 @@ elif [ -f ../README.md ] ; then
     TOP="$(cd .. && echo "$PWD")"
 else
     echo "Running from unknown directory. Exiting"
-    exit 1
+    exit 1    
 fi
 
 # Start with a fresh output dir each time:
