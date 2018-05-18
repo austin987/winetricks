@@ -340,7 +340,7 @@ test_command()
     command="$*"
     _command_dash="$(echo "$command" | tr " " "-")"
 
-    export WINEPREFIX="$WINE_PREFIXES/$_command_dash"
+    export WINEPREFIX="$WINE_PREFIXES/$_command_dash test"
     #DRIVE_C="$WINEPREFIX/dosdevices/c:"
 
     # always use a clean $WINEPREFIX
