@@ -463,15 +463,23 @@ w_try_cp_font_files()
 
     _W_src_files=$(find "$_W_src_dir" -maxdepth 1 -type f -iname "$_W_pattern")
 
+    # This breaks in special prefixes
+    #OLDIFS="$IFS"
+    #IFS=$'\n'
     for _W_src_file in $_W_src_files; do
         # Extract the file name and lower case it
-        _W_file_name=$(basename "$_W_src_file" | tr "[:upper:]" "[:lower:]")
+        _W_file_name="$(basename "$_W_src_file" | tr "[:upper:]" "[:lower:]")"
 
         # Remove any existing font files that might have the same name, but with different case characters
         find "$_W_dest_dir" -maxdepth 1 -type f -iname "$_W_file_name" -exec rm '{}' ';'
 
+        echo "am i here?"
+        echo "_W_src_file 3 is $_W_src_file zzz"
+        echo "_W_dest_dir 3 is $_W_dest_dir zzz"
+        echo "_W_file_name 3 is $_W_file_name zzz"
         w_try cp -f "$_W_src_file" "$_W_dest_dir/$_W_file_name"
     done
+    #IFS="$OLDIFS"
 
     # Wait for Wine to add the new font to the registry under HKCU\Software\Wine\Fonts\Cache
     w_wineserver -w
