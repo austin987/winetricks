@@ -402,12 +402,6 @@ test_command()
                     killall winefile.exe
                 fi
                 ;;
-            hegemony*)
-                # FIXME: this should this be in the verb
-                if pgrep Launcher ; then
-                    killall Launcher.exe
-                fi
-                ;;
             wmi)
                 # wmi starts a service
                 # FIXME: this should this be in the verb
