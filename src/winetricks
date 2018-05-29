@@ -8117,7 +8117,7 @@ load_icodecs()
         #
         # So instead, use system kill
         inode_pid="$(pgrep -f 'explorer.exe C:\\Program Files\\Ligos\\Indeo')"
-        kill -HUP "$inode_pid"
+        kill "$inode_pid"
 }
 
 #----------------------------------------------------------------
