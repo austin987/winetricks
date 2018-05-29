@@ -11454,6 +11454,14 @@ load_fontxplorer()
 
     w_try_cd "$W_CACHE/fontxplorer"
     w_try "$WINE" Font_Xplorer_122_Free.exe $W_UNATTENDED_SLASH_S
+
+    # Note, this leaves a dangling explorer window. The window name changed at some point
+    # because of a fixed wine bug that I'm too lazy to find. Since AHK doesn't make command line
+    # arguments easily accessible, we'd have to just kill all explorer.exe processes.
+    #
+    # So instead, use system kill
+    inode_pid="$(pgrep -f "explorer.exe C:\\\\users\\\\$LOGNAME\\\\Start Menu\\\\Programs\\\\Font Xplorer")"
+    kill "$inode_pid"
 }
 
 #----------------------------------------------------------------
