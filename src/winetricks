@@ -11025,10 +11025,11 @@ w_metadata fakechinese fonts \
 
 load_fakechinese()
 {
-    w_call wenquanyi
     # Loads Wenquanyi fonts and sets aliases for Microsoft Chinese fonts
     # Reference : https://en.wikipedia.org/wiki/List_of_Microsoft_Windows_fonts
+    w_call wenquanyi
 
+    # English name substitutions:
     w_register_font_replacement "Microsoft JhengHei" "WenQuanYi Micro Hei"
     w_register_font_replacement "Microsoft YaHei" "WenQuanYi Micro Hei"
     w_register_font_replacement "SimHei" "WenQuanYi Micro Hei"
@@ -11040,6 +11041,29 @@ load_fakechinese()
     w_register_font_replacement "NSimSun" "WenQuanYi Micro Hei"
     w_register_font_replacement "SimKai" "WenQuanYi Micro Hei"
     w_register_font_replacement "SimSun" "WenQuanYi Micro Hei"
+
+    # Native Chinese substitutions:
+    # See https://github.com/Winetricks/winetricks/issues/781 and
+    # https://chromium.googlesource.com/chromium/blink/+/d829fc35652a9a1a8cb102d2425a6e736a7be59f%5E!/
+    w_register_font_replacement "\\x4EFF\\x5B8B" "Wenquanyi Micro Hei"
+    w_register_font_replacement "\\x4EFF\\x5B8B_GB2312" "Wenquanyi Micro Hei"
+    w_register_font_replacement "\\x5B8B\\x4F53" "Wenquanyi Micro Hei"
+    w_register_font_replacement "\\x5B8B\\x4F53-ExtB" "Wenquanyi Micro Hei"
+    w_register_font_replacement "\\x5FAE\\x8EDF\\x6B63\\x9ED1\\x9AD4" "Wenquanyi Micro Hei"
+    w_register_font_replacement "\\x5FAE\\x8F6F\\x96C5\\x9ED1" "Wenquanyi Micro Hei"
+    w_register_font_replacement "\\x6587\\x0050\\x004C\\x4E2D\\x6977\\x0055\\x006E\\x0069" "Wenquanyi Micro Hei"
+    w_register_font_replacement "\\x6587\\x6cc9\\x9a5b\\x6b63\\x9ed1" "Wenquanyi Micro Hei"
+    w_register_font_replacement "\\x6587\\x6cc9\\x9a7f\\x6b63\\x9ed1" "Wenquanyi Micro Hei"
+    w_register_font_replacement "\\x6587\\x9f0e\\x0050\\x004c\\x7d30\\x4e0a\\x6d77\\x5b8b\\x0055\\x006e\\x0069" "Wenquanyi Micro Hei"
+    w_register_font_replacement "\\x6587\\x9f0e\\x0050\\x004c\\x7ec6\\x4e0a\\x6d77\\x5b8b\\x0055\\x006e\\x0069" "Wenquanyi Micro Hei"
+    w_register_font_replacement "\\x65B0\\x5B8B\\x4F53" "Wenquanyi Micro Hei"
+    w_register_font_replacement "\\x65B0\\x7D30\\x660E\\x9AD4" "Wenquanyi Micro Hei"
+    w_register_font_replacement "\\x65B0\\x7D30\\x660E\\x9AD4-ExtB" "Wenquanyi Micro Hei"
+    w_register_font_replacement "\\x6977\\x4F53" "Wenquanyi Micro Hei"
+    w_register_font_replacement "\\x6A19\\x6977\\x9AD4" "Wenquanyi Micro Hei"
+    w_register_font_replacement "\\x7D30\\x660E\\x9AD4" "Wenquanyi Micro Hei"
+    w_register_font_replacement "\\x7D30\\x660E\\x9AD4-ExtB" "Wenquanyi Micro Hei"
+    w_register_font_replacement "\\x9ED1\\x4F53" "Wenquanyi Micro Hei"
 }
 
 #----------------------------------------------------------------
@@ -11051,7 +11075,6 @@ w_metadata fakejapanese fonts \
 
 load_fakejapanese()
 {
-    w_call takao
     # Loads Takao fonts and sets aliases for MS Gothic, MS UI Gothic, and MS PGothic, mainly for Japanese language support
     # Aliases to set:
     # MS Gothic --> TakaoGothic
@@ -11059,6 +11082,8 @@ load_fakejapanese()
     # MS PGothic --> TakaoPGothic
     # MS Mincho --> TakaoMincho
     # MS PMincho --> TakaoPMincho
+    w_call takao
+
     # These aliases were taken from what was listed in Ubuntu's fontconfig definitions.
 
     w_register_font_replacement "MS Gothic" "TakaoGothic"
@@ -11066,6 +11091,14 @@ load_fakejapanese()
     w_register_font_replacement "MS PGothic" "TakaoPGothic"
     w_register_font_replacement "MS Mincho" "TakaoMincho"
     w_register_font_replacement "MS PMincho" "TakaoPMincho"
+
+    # Native Japanese substitutions:
+    # See https://github.com/Winetricks/winetricks/issues/781 and
+    # https://chromium.googlesource.com/chromium/blink/+/d829fc35652a9a1a8cb102d2425a6e736a7be59f%5E!/
+    w_register_font_replacement "\\xFF2D\\xFF33\\x30B4\\x30B7\\x30C3\\x30AF" "TakaoGothic"
+    w_register_font_replacement "\\xFF2D\\xFF33\\x660E\\x671D" "TakaoMincho"
+    w_register_font_replacement "\\xFF2D\\xFF33\\xFF30\\x30B4\\x30B7\\x30C3\\x30AF" "TakaoPGothic"
+    w_register_font_replacement "\\xFF2D\\xFF33\\xFF30\\x660E\\x671D" "TakaoPMincho"
 }
 
 #----------------------------------------------------------------
@@ -11100,6 +11133,14 @@ load_fakejapanese_ipamona()
     w_register_font_replacement "$jpname_mspgothic" "IPAMonaPGothic"
     w_register_font_replacement "$jpname_msmincho" "IPAMonaMincho"
     w_register_font_replacement "$jpname_mspmincho" "IPAMonaPMincho"
+
+    # Native Japanese substitutions:
+    # See https://github.com/Winetricks/winetricks/issues/781 and
+    # https://chromium.googlesource.com/chromium/blink/+/d829fc35652a9a1a8cb102d2425a6e736a7be59f%5E!/
+    w_register_font_replacement "\\xFF2D\\xFF33\\x30B4\\x30B7\\x30C3\\x30AF" "IPAMonathic"
+    w_register_font_replacement "\\xFF2D\\xFF33\\x660E\\x671D" "IPAMonaMincho"
+    w_register_font_replacement "\\xFF2D\\xFF33\\xFF30\\x30B4\\x30B7\\x30C3\\x30AF" "IPAMonaPGothic"
+    w_register_font_replacement "\\xFF2D\\xFF33\\xFF30\\x660E\\x671D" "IPAMonaPMincho"
 }
 
 #----------------------------------------------------------------
@@ -11123,6 +11164,8 @@ load_fakejapanese_vlgothic()
     w_register_font_replacement "Meiryo UI" "VL Gothic"
     w_register_font_replacement "Meiryo" "VL Gothic"
     w_register_font_replacement "$jpname_meiryo" "VL Gothic"
+
+    w_register_font_replacement "\\x30E1\\x30A4\\x30EA\\x30AA" "VL Gothic"
 }
 
 #----------------------------------------------------------------
@@ -11134,8 +11177,9 @@ w_metadata fakekorean fonts \
 
 load_fakekorean()
 {
-    w_call baekmuk
     # Loads Baekmuk fonts and sets as an alias for Gulim, Dotum, and Batang for Korean language support
+    w_call baekmuk
+
     # Aliases to set:
     # Gulim --> Baekmuk Gulim
     # GulimChe --> Baekmuk Gulim
@@ -11150,6 +11194,23 @@ load_fakekorean()
     w_register_font_replacement "BatangChe" "Baekmuk Batang"
     w_register_font_replacement "Dotum" "Baekmuk Dotum"
     w_register_font_replacement "DotumChe" "Baekmuk Dotum"
+
+    # Native Korean substitutions:
+    # See https://github.com/Winetricks/winetricks/issues/781 and
+    # https://chromium.googlesource.com/chromium/blink/+/d829fc35652a9a1a8cb102d2425a6e736a7be59f%5E!/
+    w_register_font_replacement "\\xAD74\\xB9BC" "Baekmuk Gulim"
+    w_register_font_replacement "\\xAD74\\xB9BC\\xCCB4" "Baekmuk Gulim"
+    w_register_font_replacement "\\xB3CB\\xC6C0" "Baekmuk Dotum"
+    w_register_font_replacement "\\xB3CB\\xC6C0\\xCCB4" "Baekmuk Dotum"
+    w_register_font_replacement "\\xBC14\\xD0D5" "Baekmuk Batang"
+    w_register_font_replacement "\\xBC14\\xD0D5\\xCCB4" "Baekmuk Batang"
+
+    # FIXME: no idea what this one should be (Chromium uses 'Gungsuh')
+    w_register_font_replacement "\\xAD81\\xC11C" "Baekmuk Gulim"
+    # FIXME: no idea what this one should be (Chromium uses 'Gungsuhche')
+    w_register_font_replacement "\\xAD81\\xC11C\\xCCB4C" "Baekmuk Gulim"
+    # FIXME: no idea what this one should be (Chromium uses 'Malgun Gothic')
+    w_register_font_replacement "\\xB9D1\\xC740 \\xACE0\\xB515C" "Baekmuk Gulim"
 }
 
 #----------------------------------------------------------------
