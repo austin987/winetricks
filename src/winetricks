@@ -2381,6 +2381,8 @@ w_set_winver()
 
     case "$1" in
         win31)
+            w_package_unsupported_win64
+
             echo "Setting Windows version to $1"
             cat > "$W_TMP"/set-winver.reg <<_EOF_
 REGEDIT4
@@ -2393,6 +2395,8 @@ _EOF_
             return
             ;;
         win95)
+            w_package_unsupported_win64
+
             # This key is only used for Windows 95/98:
 
             echo "Setting Windows version to $1"
@@ -2409,6 +2413,8 @@ _EOF_
             return
             ;;
         win98)
+            w_package_unsupported_win64
+
             # This key is only used for Windows 95/98:
 
             echo "Setting Windows version to $1"
@@ -2425,6 +2431,10 @@ _EOF_
             return
             ;;
         nt40)
+            # This breaks mdac28, which uses nt40. winxp/win2k3 don't work
+            # FIXME: mdac28 must be fixed before this is merged
+            # w_package_unsupported_win64
+
             # Similar to modern version, but sets two extra keys:
 
             echo "Setting Windows version to $1"
@@ -2450,6 +2460,8 @@ _EOF_
             return
             ;;
         win2k)
+            w_package_unsupported_win64
+
             csdversion="Service Pack 4"
             currentbuildnumber="2195"
             currentversion="5.0"
