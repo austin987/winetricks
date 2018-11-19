@@ -7849,7 +7849,9 @@ w_metadata dotnet35sp1 dlls \
 
 load_dotnet35sp1()
 {
-    #w_package_unsupported_win64
+    if [ "$W_ARCH" = "win64" ] && w_workaround_wine_bug 46168 "Doesn't install under win64 yet"; then
+        w_package_unsupported_win64
+    fi
 
     case "$W_PLATFORM" in
         windows_cmd) ;;
