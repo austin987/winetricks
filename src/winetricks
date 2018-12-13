@@ -20772,7 +20772,7 @@ then
             ;;
         "")
             if [ -z "$DISPLAY" ]; then
-                if "$(uname -s)" = "Darwin"; then
+                if [ "$(uname -s)" = "Darwin" ]; then
                     echo "Running on OSX, but DISPLAY is not set...probably using Mac Driver."
                 else
                     echo "DISPLAY not set, not defaulting to gui"
