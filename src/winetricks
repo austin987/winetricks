@@ -14514,6 +14514,52 @@ w_metadata wmp9 dlls \
 
 load_wmp9()
 {
+    # FIXME: maybe make a separate verb for this? i.e., wmp9_core
+    # Installer blocks 64-bit OS, but the codecs are needed by some apps.
+    # So we just extract that stuff, and ignore the installer/player
+    if [ "$W_ARCH" = "win64" ]; then
+        w_try_cabextract -d "$W_TMP" -L "$W_CACHE/$W_PACKAGE/$file1"
+
+        for dll in  asferror.dll blackbox.dll cewmdm.dll drmclien.dll drmstor.dll drmv2clt.dll \
+                    laprxy.dll mp43dmod.dll mp4sdmod.dll mpg4dmod.dll \
+                    msnetobj.dll mspmsnsv.dll mspmsp.dll msscp.dll mswmdm.dll qasf.dll wmadmod.dll \
+                    wmadmoe.dll wmdmlog.dll wmdmps.dll wmerror.dll wmidx.dll wmnetmgr.dll wmpasf.dll \
+                    wmpcd.dll wmpcore.dll wmpdxm.dll wmploc.dll wmpshell.dll wmpui.dll wmsdmod.dll \
+                    wmsdmoe2.dll wmspdmod.dll wmspdmoe.dll wmvdmod.dll wmvdmoe2.dll; do
+            w_try cp "$W_TMP/$dll" "$W_SYSTEM32_DLLS"
+
+            # Register the dlls that need it:
+            case $dll in
+                asferror.dll|mspmsnsv.dll|wmerror.dll|wmidx.dll|wmploc.dll) : ;;
+                *) w_try_regsvr $dll ;;
+            esac
+        done
+
+        # Then the rest here
+        for file in drm.inf fhg.inf roxio.inf skins.inf wmdm.inf wmexpack.inf wmfsdk.inf wmp.inf wmplayer.adm; do
+            w_try cp "$W_TMP/$file" "$W_WINDIR_UNIX/inf"
+        done
+
+        _dir="$W_SYSTEM32_DLLS/catroot/{CAC24AF7-5447-4F19-9FA6-F6E6E69D395E}"
+        mkdir -p "$_dir"
+        w_try cp "$W_TMP/wmexpack.cat" "$_dir"
+        w_try cp "$W_TMP/wmexpack.inf" "$_dir"
+
+        _dir="$W_SYSTEM32_DLLS/catroot/{f750e6c3-38ee-11d1-85e5-00c04fc295ee}"
+        mkdir -p "$_dir"
+        for file in drm.cat setup_wm.cat wmdm.cat wmexpack.cat wmfsdk.cat wmp.cat; do
+            w_try cp "$W_TMP/$file" "$_dir"
+        done
+
+        w_try cp "$W_TMP/l3codeca.acm" "$W_SYSTEM32_DLLS"
+        w_try cp "$W_TMP/wmp.ocx" "$W_SYSTEM32_DLLS"
+
+        #####
+        # FIXME: probably need some registry stuff too
+
+        return
+    fi
+
     w_skip_windows wmp9 && return
 
     # Not really expected to work well yet; see
