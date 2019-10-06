@@ -12798,7 +12798,7 @@ w_metadata droid fonts \
     installed_file1="$W_FONTSDIR_WIN/droidsans-bold.ttf"
 
 do_droid() {
-    w_download "${_W_droid_url}${1}?raw=true" "$3"  "$1"
+    w_linkcheck_ignore=1 w_download "${_W_droid_url}${1}?raw=true" "$3"  "$1"
     w_try_cp_font_files "$W_CACHE/droid" "$W_FONTSDIR_UNIX" "$1"
     w_register_font "$(echo "$1" | tr "[:upper:]" "[:lower:]")" "$2"
 }
