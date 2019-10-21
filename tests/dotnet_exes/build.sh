@@ -24,12 +24,12 @@ for version in ISO-1 ISO-2 3 4 5 6 experimental; do
 
     *) echo "unknown version"; exit 1;;
     esac
-    
+
     # For arch: "The possible values are: anycpu, anycpu32bitpreferred, arm, x86, x64 or itanium. The default option is anycpu."
     for arch in x86 x64; do
         output="${dn_ver}-${arch}.exe"
         echo "Building ${output} for C# version ${version} / arch=${arch}"
-        
+
         mcs "-langversion:${version}" "-out:${output}" "-platform:${arch}" helloworld.cs
     done
 done
