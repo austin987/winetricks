@@ -6,6 +6,9 @@ set -x
 # Only in travis since local tree may have other diffs applied:
 make cleanup
 
+# FIXME: git has a better way now
+
+
 # Git diff doesn't show the trailing whitespace as of 2018/05/13.
 # Tried various color/diff settings with no luck.
 # The workaround is cat, but commands aren't standard on Linux/OS X

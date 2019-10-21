@@ -21,8 +21,6 @@ addons:
     # for checkbashisms
     - devscripts
 
-# Note: if statements cannot go across multiple lines. Combine into one, or move to a shell script!
-
 # Ubuntu notes:
 #    * ShellCheck is already installed in TravisCI
 #    * bashate is not available on Trusty and we need to install it manually
@@ -51,13 +49,26 @@ addons:
 #
 # If the script fails, install pip and use it to install bashate
 before_install:
-    - time sh ./misc/travis-install-bashate-deb.sh || time sh ./misc/travis-install-bashate-pip.sh
-      # "brew update" (or auto-update when installing) takes long time
-      # checkbashisms and shellcheck can be installed without this
-      # So installing with "HOMEBREW_NO_AUTO_UPDATE=1" considerably reduces
-      # job time on macOS
-      # If it fails retry with auto-update
-    - if [[ "$TRAVIS_OS_NAME" == "osx" ]] ; then time env HOMEBREW_NO_AUTO_UPDATE=1 brew install checkbashisms shellcheck || time brew install checkbashisms shellcheck ; fi
+    - |
+      if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+           time sh ./misc/travis-install-bashate-deb.sh
+      else
+          time sh ./misc/travis-install-bashate-pip.sh
+
+      fi
+    # "brew update" (or auto-update when installing) takes a long time,
+    # but checkbashisms and shellcheck can be installed without this
+    # So try installing with "HOMEBREW_NO_AUTO_UPDATE=1", which considerably reduces job time on macOS
+    # If it fails retry with auto-update
+    - |
+      if [[ "$TRAVIS_OS_NAME" == "osx" ]] ; then
+          time env HOMEBREW_NO_AUTO_UPDATE=1 brew install checkbashisms shellcheck || touch ./brew-install.failed
+          # Note: bashate isn't availble
+          # ./tests/shell-checks will skip the tests on OSX if these aren't available (but not on Linux)
+          time brew install checkbashisms || true
+          time brew install shellcheck || true
+          time brew install yq || true
+      fi
 
 # Note if testing on a branch, you can replace this with your desired command, e.g.,:
 # script: time sh ./src/winetricks -q comctl32
@@ -76,8 +87,8 @@ script:
     # Also check for trailing whitespace. Not doing in shell-checks because it depends on a clean tree (uses git diff):
     - if [ "$TRAVIS_OS_NAME" = "linux" ]; then time sh ./tests/whitespace-check; fi
 
-    # Keep updates working
-    - time sh ./tests/self-update-test
+    # Keep updates working, but only for master branch of main repo:
+    - if [ "$TRAVIS_BRANCH" = "master" ] && [ "$TRAVIS_REPO_SLUG" = "Winetricks/winetricks"; then time sh ./tests/self-update-test; else echo "Skipping self-update-test, not on master branch on Winetricks/winetricks repo"; fi
 
 # OS X doesn't allow writing to /usr/bin, skip non-PREFIX make install test there
 install:
