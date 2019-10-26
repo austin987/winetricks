@@ -86,8 +86,14 @@ script:
     # Also check for trailing whitespace. Not doing in shell-checks because it depends on a clean tree (uses git diff):
     - if [ "$TRAVIS_OS_NAME" = "linux" ]; then time sh ./tests/whitespace-check; fi
 
-    # Keep updates working
-    - time sh ./tests/self-update-test
+    # FIXME: is this optional or a speed thing?
+    # Keep updates working, but only check against main repo, not forks
+    - |
+      if [ "$TRAVIS_REPO_SLUG" = "Winetricks/winetricks"; then
+          time sh ./tests/self-update-test
+      else
+          echo "Skipping self-update-test, not on master branch on Winetricks/winetricks repo"
+      fi
 
 # OS X doesn't allow writing to /usr/bin, skip non-PREFIX make install test there
 install:
