@@ -211,7 +211,6 @@ main() {
         test_checkbashisms
         test_shellcheck
     done
-
 }
 
 main

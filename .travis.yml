@@ -51,7 +51,7 @@ addons:
 before_install:
     - |
       if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-           time sh ./misc/travis-install-bashate-deb.sh
+          time sh ./misc/travis-install-bashate-deb.sh
       else
           time sh ./misc/travis-install-bashate-pip.sh
 
@@ -59,10 +59,11 @@ before_install:
     # "brew update" (or auto-update when installing) takes a long time,
     # but checkbashisms and shellcheck can be installed without this
     # So try installing with "HOMEBREW_NO_AUTO_UPDATE=1", which considerably reduces job time on macOS
-    # If it fails retry with auto-update
+    # If it fails retry each individually with auto-update enabled
     - |
       if [[ "$TRAVIS_OS_NAME" == "osx" ]] ; then
-          time env HOMEBREW_NO_AUTO_UPDATE=1 brew install checkbashisms shellcheck || touch ./brew-install.failed
+          time env HOMEBREW_NO_AUTO_UPDATE=1 brew install checkbashisms shellcheck yq || touch ./brew-install.failed
+
           # Note: bashate isn't availble
           # ./tests/shell-checks will skip the tests on OSX if these aren't available (but not on Linux)
           time brew install checkbashisms || true
