@@ -56,12 +56,14 @@ before_install:
     # So try installing with "HOMEBREW_NO_AUTO_UPDATE=1", which considerably reduces job time on macOS
     # If it fails retry each individually with auto-update enabled
     - |
-      if [[ "$TRAVIS_OS_NAME" == "osx" ]] && time env HOMEBREW_NO_AUTO_UPDATE=1 brew install checkbashisms shellcheck yq; then
-          # everything worked, nothing more to do:
-          :
+      if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+          if time env HOMEBREW_NO_AUTO_UPDATE=1 brew install checkbashisms shellcheck yq; then
+              # everything worked, nothing more to do:
+              :
+          fi
       else
-          # Note: ./tests/shell-checks will skip the tests on OSX if these aren't available (but not on Linux)
-          # so don't fail if one isn't available. Still good to try to get both Linux/OSX, since they may have different versions.
+          # Note: ./tests/shell-checks will skip the tests on OSX (homebrew can be flaky) if they aren't available (but not on Linux).
+          # Still want to try to get both Linux/OSX, since they may have different versions.
           for tool in checkbashisms shellcheck yq; do
               if [[ ! -x "$(command -v \"$tool\")" ]]; then
                   time brew install "$tool" || true
