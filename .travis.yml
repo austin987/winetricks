@@ -57,7 +57,7 @@ before_install:
     # If it fails retry each individually with auto-update enabled
     - |
       if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-          if time env HOMEBREW_NO_AUTO_UPDATE=1 brew install checkbashisms shellcheck yq; then
+          if HOMEBREW_NO_AUTO_UPDATE=1 brew install checkbashisms shellcheck yq; then
               # everything worked, nothing more to do:
               :
           fi
