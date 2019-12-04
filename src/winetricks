@@ -4736,6 +4736,7 @@ winetricks_cleanup()
 
 winetricks_set_unattended()
 {
+    # blah
     # We shouldn't use all these extra variables.  Instead, we should
     # use ${foo:+bar} to jam in commandline options for silent install
     # only if W_OPT_UNATTENDED is nonempty.  See
