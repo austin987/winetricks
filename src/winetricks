@@ -5096,6 +5096,11 @@ winetricks_set_wineprefix()
         WINE64="false"
         WINE_ARCH="${WINE}"
         WINE_MULTI="${WINE}"
+
+        # There's also ProgramW6432, which =%ProgramFiles%(but only available when running under a 64 bit OS)
+        # See https://ss64.com/nt/syntax-variables.html
+        W_PROGRAMW6432_WIN="$(w_expand_env ProgramW6432)"
+        W_PROGRAMW6432_UNIX="$(w_pathconv -u "$W_PROGRAMW6432_WIN")"
     fi
 
     # Unset WINEARCH which might be set from winetricks_set_winearch().
