@@ -4999,6 +4999,7 @@ winetricks_set_wineprefix()
     W_COMMONFILES_X86_WIN="$(w_expand_env CommonProgramFiles)"
     W_COMMONFILES_WIN="$(w_expand_env CommonProgramW6432)"
 
+    # FIXME: move to 64-bit specific stuff
     # CommonProgramW6432 is only defined on win64, not win32 arches
     # win32: %CommonProgramW6432%
     # win64: 'C:\Program Files\Common Files'
@@ -5012,6 +5013,7 @@ winetricks_set_wineprefix()
     W_PROGRAMS_UNIX="$(w_pathconv -u "$W_PROGRAMS_WIN")"
     W_WINDIR_UNIX="$W_DRIVE_C/windows"
 
+    # FIXME: move to 64-bit specific stuff
     # 64-bit Windows has a second directory for program files
     W_PROGRAMS_X86_WIN="${W_PROGRAMS_WIN} (x86)"
     W_PROGRAMS_X86_UNIX="${W_PROGRAMS_UNIX} (x86)"
