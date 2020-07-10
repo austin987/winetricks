@@ -639,6 +639,7 @@ test_listing()
     export WINE="$W_WINE"
     test_command mfc42
 
+    # FIXME: doesn't this use test_command?
     export WINEPREFIX="$WINE_PREFIXES/mfc42"
     export _W_wine_not_needed=1
     export WINE=/dev/null
