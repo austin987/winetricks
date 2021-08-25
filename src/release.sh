@@ -88,7 +88,7 @@ git commit src/winetricks -m "development version bump - ${version}-next"
 if [ ${nopush} = 1 ] ; then
     echo "--no-push used, not pushing commits / tags"
 else
-    git push
+    git push -f
     git push --tags
 fi
 
