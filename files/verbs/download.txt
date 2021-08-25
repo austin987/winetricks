@@ -200,7 +200,10 @@ dxvk170
 dxvk171
 dxvk172
 dxvk173
-dxvk_master
+dxvk180
+dxvk181
+dxvk190
+dxvk191
 emu8086
 esent
 eufonts
@@ -226,6 +229,7 @@ galliumnine04
 galliumnine05
 galliumnine06
 galliumnine07
+galliumnine08
 gdiplus
 georgia
 gfw
@@ -312,6 +316,7 @@ ollydbg201
 opensymbol
 openwatcom
 pdh
+pdh_nt4
 penpenxmas
 peverify
 physx
@@ -390,9 +395,7 @@ vjrun20
 vlc
 vlgothic
 vstools2019
-vulkanrt
 vulkanrt121412
-vulkansdk
 vulkansdk121412
 webdings
 webio
