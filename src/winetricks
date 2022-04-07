@@ -13844,6 +13844,35 @@ load_meiryo()
 
 #----------------------------------------------------------------
 
+w_metadata pmingliu fonts \
+    title="PMingLiU" \
+    publisher="DynaComware" \
+    year="2017" \
+    media="download" \
+    file1="PMingLiUUpdatePack.msi" \
+    installed_file1="${W_FONTSDIR_WIN}/mingliu.ttc"
+
+load_pmingliu()
+{
+    w_download "http://jftp.just.edu.tw/fonts-3.1ForWinXP/PMingLiU%20Update%20Pack.msi" 505c351e57f16653c1319616ca7397eb11807601f1565703c1844f222d982d0a "${file1}"
+
+    # installer fails for me, with an english locale, with every msiexec option listed at
+    # https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/msiexec
+    # Instead, use cabextract to extract the two ttf it installs via GUI install:
+    w_try_cabextract -d "${W_TMP}" -F "_D0676E6C06584C9E9B6070C327CE2DA0" "${W_CACHE}/${W_PACKAGE}/${file1}"
+    w_try_cabextract -d "${W_TMP}" -F "_EF955444ECD54F8695898A738A27F115" "${W_CACHE}/${W_PACKAGE}/${file1}"
+
+    w_try mv "${W_TMP}/_D0676E6C06584C9E9B6070C327CE2DA0" "${W_TMP}/mingliu.ttc"
+    w_try mv "${W_TMP}/_EF955444ECD54F8695898A738A27F115" "${W_TMP}/mingliub.ttc"
+
+    w_try_cp_font_files "${W_TMP}" "${W_FONTSDIR_UNIX}" "*.ttc"
+
+    w_register_font mingliu.ttc "Source Han Sans TC"
+    w_register_font mingliub.ttc "Source Han Sans TC Bold"
+}
+
+#----------------------------------------------------------------
+
 w_metadata pptfonts fonts \
     title="All MS PowerPoint Viewer fonts" \
     publisher="various" \
