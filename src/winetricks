@@ -12034,14 +12034,41 @@ load_quicktime76()
 #----------------------------------------------------------------
 
 w_metadata riched20 dlls \
+    title="MS RichEdit Control 3.0 (riched20.dll)" \
+    publisher="Microsoft" \
+    year="2011" \
+    media="download" \
+    conflicts="riched20_win2k" \
+    file1="../win7sp1/windows6.1-KB976932-X86.exe" \
+    installed_file1="${W_SYSTEM32_DLLS_WIN}/riched20.dll"
+
+load_riched20()
+{
+    w_call msftedit
+
+    helper_win7sp1 x86_microsoft-windows-riched32_31bf3856ad364e35_6.1.7601.17514_none_9f081dc1e0ddbddb/riched20.dll
+    w_try_cp_dll "${W_TMP}/x86_microsoft-windows-riched32_31bf3856ad364e35_6.1.7601.17514_none_9f081dc1e0ddbddb/riched20.dll" "${W_SYSTEM32_DLLS}/riched20.dll"
+
+    if [ "${W_ARCH}" = "win64" ]; then
+        helper_win7sp1_x64 amd64_microsoft-windows-riched32_31bf3856ad364e35_6.1.7601.17514_none_fb26b945993b2f11/riched20.dll
+        w_try_cp_dll "${W_TMP}/amd64_microsoft-windows-riched32_31bf3856ad364e35_6.1.7601.17514_none_fb26b945993b2f11/riched20.dll" "${W_SYSTEM64_DLLS}/riched20.dll"
+    fi
+
+    w_override_dlls native,builtin riched20
+}
+
+#----------------------------------------------------------------
+
+w_metadata riched20_win2k dlls \
     title="MS RichEdit Control 2.0 (riched20.dll)" \
     publisher="Microsoft" \
     year="2004" \
     media="download" \
+    conflicts="riched20" \
     file1="../win2ksp4/W2KSP4_EN.EXE" \
     installed_file1="${W_SYSTEM32_DLLS_WIN}/riched20.dll"
 
-load_riched20()
+load_riched20_win2k()
 {
     # FIXME: this verb used to also install riched32.  Does anyone need that?
     helper_win2ksp4 i386/riched20.dl_
