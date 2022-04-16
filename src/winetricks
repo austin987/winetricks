@@ -11577,6 +11577,45 @@ load_pngfilt()
 
 #----------------------------------------------------------------
 
+w_metadata presentationframework dlls \
+    title="fixme" \
+    publisher="Microsoft" \
+    year="2004" \
+    media="download" \
+    file1="windowsdesktop-runtime-3.1.3-win-x86.zip" \
+    installed_file1="C:/windows/mono/mono-2.0/lib/x86/PresentationNative_cor3.dll"
+
+load_presentationframework()
+{
+    # https://github.com/Winetricks/winetricks/issues/1535
+    # Instructions from https://github.com/madewokherd/wine-mono/releases/tag/wine-mono-5.0.0
+
+    # FIXME: check if mono is installed first, bail out if not
+    if [ ! -d "${W_WINDIR_UNIX}/mono" ]; then
+        w_die "This verb only works if wine-mono is installed"
+    fi
+
+    w_download https://dotnetcli.azureedge.net/dotnet/Runtime/3.1.3/windowsdesktop-runtime-3.1.3-win-x86.zip
+    w_try_unzip "${W_WINDIR_UNIX}/mono/mono-2.0/lib/x86" "${W_CACHE}/${W_PACKAGE}/${file1}" shared/Microsoft.WindowsDesktop.App/3.1.3/PresentationNative_cor3.dll
+    w_try_unzip "${W_WINDIR_UNIX}/mono/mono-2.0/lib/x86" "${W_CACHE}/${W_PACKAGE}/${file1}" shared/Microsoft.WindowsDesktop.App/3.1.3/wpfgfx_cor3.dll
+
+    # FIXME: instructions say to drop it here, but does it need to be renamed to d3dcompiler_47.dll?
+    w_try_unzip "${W_SYSTEM32_DLLS}" "${W_CACHE}/${W_PACKAGE}/${file1}" shared/Microsoft.WindowsDesktop.App/3.1.3/D3DCompiler_47_cor3.dll
+
+    if [ "${W_ARCH}" = "win64" ]; then
+        w_download https://dotnetcli.azureedge.net/dotnet/Runtime/3.1.3/windowsdesktop-runtime-3.1.3-win-x64.zip
+        w_try_unzip "${W_WINDIR_UNIX}/mono/mono-2.0/lib/x86_64" "${W_CACHE}/${W_PACKAGE}/windowsdesktop-runtime-3.1.3-win-x64.zip" shared/Microsoft.WindowsDesktop.App/3.1.3/PresentationNative_cor3.dll
+        w_try_unzip "${W_WINDIR_UNIX}/mono/mono-2.0/lib/x86_64" "${W_CACHE}/${W_PACKAGE}/windowsdesktop-runtime-3.1.3-win-x64.zip" shared/Microsoft.WindowsDesktop.App/3.1.3/wpfgfx_cor3.dll
+
+        # FIXME: instructions say to drop it here, but does it need to be renamed to d3dcompiler_47.dll?
+        w_try_unzip "${W_WINDIR_UNIX}/mono/mono-2.0/lib/x86_64" "${W_CACHE}/${W_PACKAGE}/windowsdesktop-runtime-3.1.3-win-x64.zip" shared/Microsoft.WindowsDesktop.App/3.1.3/D3DCompiler_47_cor3.dll
+    fi
+
+    # FIXME: may also need native WpfGfx D3Dcompiler
+}
+
+#----------------------------------------------------------------
+
 w_metadata prntvpt dlls \
     title="prntvpt.dll" \
     publisher="Microsoft" \
