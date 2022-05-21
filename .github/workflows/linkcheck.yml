@@ -4,8 +4,7 @@ on:
     - cron:  '43 * * * *'
 
 jobs:
-  update:
-    name: linkcheck
+  linkcheck:
     runs-on: ubuntu-latest
     steps:
       - name: checkout project
