@@ -5817,6 +5817,17 @@ helper_winxpsp3()
     w_try_cabextract -d "${W_TMP}" -L -F "${filename}" "${W_CACHE}"/winxpsp3/WindowsXP-KB936929-SP3-x86-ENU.exe
 }
 
+# Filelist at ./misc/filelists/winvistasp1.txt
+helper_winvistasp1()
+{
+    filename="$1"
+
+    # There's also a 32-bit version, but since 64-bit contains both, trying to just use one to save disk space
+    w_download_to winvista https://download.microsoft.com/download/8/3/b/83b8c814-b000-44a4-b667-8c1f58727b8b/Windows6.0-KB936330-X64-wave0.exe a48ec1ba10120676c0529121dff5303ec777988ba25133d1dd15234a04dd6f9e
+
+    cabextract -d "${W_TMP}" -F "${filename}" "${W_CACHE}/winvista/Windows6.0-KB936330-X64-wave0.exe"
+}
+
 # Filelist at ./misc/filelists/win7sp1.txt
 helper_win7sp1()
 {
