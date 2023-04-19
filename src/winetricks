@@ -6816,17 +6816,22 @@ load_dinput()
 w_metadata dinput8 dlls \
     title="MS DirectInput 8 from DirectX user redistributable" \
     publisher="Microsoft" \
-    year="2010" \
+    year="2013" \
     media="download" \
-    file1="../directx9/directx_feb2010_redist.exe" \
+    file1="../winvistasp1/Windows6.0-KB936330-X64-wave0.exe" \
     installed_file1="${W_SYSTEM32_DLLS_WIN}/dinput8.dll"
 
 load_dinput8()
 {
-    helper_directx_dl
+    helper_winvistasp1 x86_microsoft-windows-directx-directinput_31bf3856ad364e35_6.0.6001.18000_none_1d981a3c0baebdc7/dinput8.dll
+    w_try_cp_dll "${W_TMP}/x86_microsoft-windows-directx-directinput_31bf3856ad364e35_6.0.6001.18000_none_1d981a3c0baebdc7/dinput8.dll" "${W_SYSTEM32_DLLS}/dinput8.dll"
 
-    w_try_cabextract -d "${W_TMP}" -L -F 'dxnt.cab' "${W_CACHE}"/directx9/${DIRECTX_NAME}
-    w_try_cabextract -d "${W_SYSTEM32_DLLS}" -L -F 'dinput8.dll' "${W_TMP}/dxnt.cab"
+    if [ "${W_ARCH}" = "win64" ]; then
+        helper_winvistasp1 amd64_microsoft-windows-directx-directinput_31bf3856ad364e35_6.0.6001.18000_none_79b6b5bfc40c2efd/dinput8.dll
+        w_try_cp_dll "${W_TMP}/amd64_microsoft-windows-directx-directinput_31bf3856ad364e35_6.0.6001.18000_none_79b6b5bfc40c2efd/dinput8.dll" "${W_SYSTEM64_DLLS}/dinput8.dll"
+        # Don't try to register native dinput8; it doesn't export DllRegisterServer().
+        #w_try_regsvr64 dinput8
+    fi
 
     # Don't try to register native dinput8; it doesn't export DllRegisterServer().
     #w_try_regsvr32 dinput8
